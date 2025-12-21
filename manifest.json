@@ -7,12 +7,12 @@
   "theme_color": "#2c3e50",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgZmlsbD0iI2Y5ZjAwMCIvPjx0ZXh0IHg9Ijk2IiB5PSIxMjgiIGZvbnQtc2l6ZT0iOTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMwMDA4ZmYiPiYjMDI3OzwvdGV4dD48L3N2Zz4=",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "icon-512.png",
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iI2Y5ZjAwMCIvPjx0ZXh0IHg9IjI1NiIgeT0iMzM2IiBmb250LXNpemU9IjI1NiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzAwMDhmZiI+4oCmPC90ZXh0Pjwvc3ZnPg==",
       "sizes": "512x512",
       "type": "image/png"
     }
