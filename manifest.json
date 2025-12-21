@@ -1,0 +1,8 @@
+{
+  "name": "Business Empire Online",
+  "short_name": "BusinessEmpire",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2c3e50"
+}
