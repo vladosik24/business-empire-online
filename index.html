@@ -3,37 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Business Empire Online</title>
+<title>Business Empire ₴</title>
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div id="login">
-  <h1>Business Empire Online</h1>
-  <input id="nameInput" placeholder="Ваше імʼя">
-  <button onclick="startGame()">Увійти</button>
-</div>
-
-<div id="game" class="hidden">
-  <h2 id="playerName"></h2>
-  <p>💰 Гроші: <span id="money">0</span></p>
-  <p>📈 Дохід / хв: <span id="income">0</span></p>
-
-  <h3>🏢 Бізнеси</h3>
-  <div id="businesses"></div>
-
-  <h3>🏆 Рейтинг</h3>
-  <ol id="rating"></ol>
-
-  <div id="events"></div>
-</div>
-
+  <header>
+    <h1>Business Empire ₴</h1>
+    <div id="balance">Баланс: ₴0</div>
+    <div id="bonus-timer">Щоденний бонус: 00:00</div>
+  </header>
+  <main>
+    <div id="business-list"></div>
+    <div id="events"></div>
+  </main>
+  <footer>
+    <div id="stats">
+      <p>Бізнесів: 0 | Дохід: ₴0/сек</p>
+    </div>
+    <button id="daily-bonus-btn">Забрати щоденний бонус</button>
+  </footer>
 <script src="app.js"></script>
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js');
-}
-</script>
 </body>
 </html>
