@@ -1,122 +1,115 @@
-let player = null;
-
-const BUSINESS_LIST = [
-  { name: "Кіоск", cost: 500, income: 5 },
-  { name: "Магазин", cost: 1500, income: 20 },
-  { name: "Кафе", cost: 4000, income: 60 },
-  { name: "Компанія", cost: 10000, income: 200 }
+// ====== GAME DATA ======
+let balance = parseFloat(localStorage.getItem("balance")) || 0;
+let businesses = JSON.parse(localStorage.getItem("businesses")) || [
+  {name:"Кава", basePrice:50, baseIncome:1, level:0},
+  {name:"Міні-магазин", basePrice:200, baseIncome:5, level:0},
+  {name:"Інтернет-магазин", basePrice:1000, baseIncome:20, level:0}
 ];
+let lastBonus = parseInt(localStorage.getItem("lastBonus")) || 0;
 
-function startGame() {
-  const name = document.getElementById("nameInput").value.trim();
-  if (!name) return alert("Введіть імʼя");
+// ====== DOM ======
+const balanceEl = document.getElementById("balance");
+const businessListEl = document.getElementById("business-list");
+const eventsEl = document.getElementById("events");
+const statsEl = document.getElementById("stats");
+const bonusBtn = document.getElementById("daily-bonus-btn");
+const bonusTimerEl = document.getElementById("bonus-timer");
 
-  const saved = localStorage.getItem("player_" + name);
-  player = saved ? JSON.parse(saved) : {
-    name,
-    money: 1688,
-    income: 0,
-    businesses: {},
-    upgrades: {}
-  };
-
-  document.getElementById("login").classList.add("hidden");
-  document.getElementById("game").classList.remove("hidden");
-  document.getElementById("playerName").innerText = player.name;
-
-  render();
-  setInterval(tick, 1000);
-  setInterval(randomEvent, 30000);
-}
-
-function tick() {
-  player.money += player.income / 60;
-  save();
-  render();
-  updateRating();
-}
-
-function buyBusiness(index) {
-  const b = BUSINESS_LIST[index];
-  if (player.money < b.cost) return alert("Недостатньо грошей");
-
-  player.money -= b.cost;
-  player.businesses[b.name] = (player.businesses[b.name] || 0) + 1;
-  player.income += b.income;
-
-  save();
-  render();
-  updateRating();
-}
-
-function upgradeBusiness(index) {
-  const b = BUSINESS_LIST[index];
-  const level = player.upgrades[b.name] || 0;
-  const upgradeCost = (level + 1) * b.cost;
-
-  if (player.money < upgradeCost) return alert("Недостатньо грошей на апгрейд");
-  player.money -= upgradeCost;
-  player.upgrades[b.name] = level + 1;
-  player.income += b.income;
-
-  save();
-  render();
-}
-
+// ====== RENDER ======
 function render() {
-  document.getElementById("money").innerText = Math.floor(player.money);
-  document.getElementById("income").innerText = player.income;
-
-  const list = document.getElementById("businesses");
-  list.innerHTML = "";
-  BUSINESS_LIST.forEach((b, i) => {
+  balanceEl.textContent = `Баланс: ₴${balance.toFixed(2)}`;
+  businessListEl.innerHTML = "";
+  businesses.forEach((b,i)=>{
     const div = document.createElement("div");
     div.className = "business";
-    const level = player.upgrades[b.name] || 0;
     div.innerHTML = `
-      <strong>${b.name}</strong><br>
-      Ціна: ${b.cost} 💰<br>
-      Дохід: +${b.income}/хв<br>
-      У вас: ${player.businesses[b.name] || 0}<br>
-      Апгрейд рівень: ${level} <button onclick="upgradeBusiness(${i})">Прокачати</button><br>
-      <button onclick="buyBusiness(${i})">Купити</button>
+      <h3>${b.name}</h3>
+      <p>Рівень: ${b.level}</p>
+      <p>Ціна апгрейду: ₴${(b.basePrice*Math.pow(1.6,b.level)).toFixed(2)}</p>
+      <p>Дохід: ₴${(b.baseIncome*Math.pow(1.4,b.level)).toFixed(2)}/сек</p>
+      <button onclick="upgrade(${i})">Апгрейд</button>
     `;
-    list.appendChild(div);
+    businessListEl.appendChild(div);
   });
+  const totalIncome = businesses.reduce((sum,b)=>sum+b.baseIncome*Math.pow(1.4,b.level),0);
+  statsEl.innerHTML = `<p>Бізнесів: ${businesses.length} | Дохід: ₴${totalIncome.toFixed(2)}/сек</p>`;
 }
 
-function save() {
-  localStorage.setItem("player_" + player.name, JSON.stringify(player));
-}
-
-function updateRating() {
-  const rating = [];
-  for (let key in localStorage) {
-    if (key.startsWith("player_")) {
-      rating.push(JSON.parse(localStorage[key]));
-    }
+// ====== UPGRADE ======
+function upgrade(i){
+  const b = businesses[i];
+  const price = b.basePrice*Math.pow(1.6,b.level);
+  if(balance >= price){
+    balance -= price;
+    b.level++;
+    saveGame();
+    render();
+    showEvent(`Ти апгрейдив ${b.name}!`);
+  } else {
+    showEvent(`Недостатньо грошей для ${b.name}`);
   }
-  rating.sort((a, b) => b.money - a.money);
-
-  const ol = document.getElementById("rating");
-  ol.innerHTML = "";
-  rating.slice(0, 10).forEach(p => {
-    const li = document.createElement("li");
-    li.innerText = `${p.name}: ${Math.floor(p.money)} 💰`;
-    ol.appendChild(li);
-  });
 }
 
-function randomEvent() {
-  const events = [
-    { text: "Бонус! Отримуєте 500 💰", money: 500 },
-    { text: "Кризa! Втратили 300 💰", money: -300 },
-    { text: "Інвестиція принесла 200 💰", money: 200 }
-  ];
+// ====== DAILY BONUS ======
+function canClaimBonus(){
+  const now = Date.now();
+  return now - lastBonus > 24*60*60*1000;
+}
 
-  const e = events[Math.floor(Math.random() * events.length)];
-  player.money += e.money;
-  document.getElementById("events").innerText = e.text;
-  save();
+function claimBonus(){
+  if(canClaimBonus()){
+    const bonus = 500;
+    balance += bonus;
+    lastBonus = Date.now();
+    saveGame();
+    render();
+    showEvent(`Щоденний бонус: ₴${bonus}!`);
+  } else {
+    showEvent("Щоденний бонус ще не доступний");
+  }
+}
+
+bonusBtn.onclick = claimBonus;
+
+// ====== RANDOM EVENTS ======
+function randomEvent(){
+  const r = Math.random();
+  if(r<0.05){ balance += 200; showEvent("Грант! +₴200"); }
+  else if(r<0.10){ balance -= 100; showEvent("Криза! -₴100"); }
+  else if(r<0.15){ balance += 50; showEvent("Інвестор +₴50"); }
+  saveGame();
   render();
 }
+
+setInterval(()=>{
+  const income = businesses.reduce((sum,b)=>sum+b.baseIncome*Math.pow(1.4,b.level),0);
+  balance += income;
+  saveGame();
+  render();
+  randomEvent();
+},1000);
+
+// ====== EVENTS ======
+function showEvent(text){
+  eventsEl.textContent = text;
+}
+
+// ====== SAVE ======
+function saveGame(){
+  localStorage.setItem("balance", balance);
+  localStorage.setItem("businesses", JSON.stringify(businesses));
+  localStorage.setItem("lastBonus", lastBonus);
+}
+
+// ====== BONUS TIMER ======
+function updateBonusTimer(){
+  const now = Date.now();
+  const remaining = Math.max(0,24*60*60*1000 - (now - lastBonus));
+  const h = String(Math.floor(remaining/3600000)).padStart(2,'0');
+  const m = String(Math.floor((remaining%3600000)/60000)).padStart(2,'0');
+  const s = String(Math.floor((remaining%60000)/1000)).padStart(2,'0');
+  bonusTimerEl.textContent = `Щоденний бонус: ${h}:${m}:${s}`;
+}
+setInterval(updateBonusTimer,1000);
+
+render();
