@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Business Empire Online</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<div id="login">
+  <h1>Business Empire Online</h1>
+  <input id="nameInput" placeholder="Ваше імʼя">
+  <button onclick="startGame()">Увійти</button>
+</div>
+
+<div id="game" class="hidden">
+  <h2 id="playerName"></h2>
+  <p>💰 Гроші: <span id="money">0</span></p>
+  <p>📈 Дохід / хв: <span id="income">0</span></p>
+
+  <h3>🏢 Бізнеси</h3>
+  <div id="businesses"></div>
+
+  <h3>🏆 Рейтинг</h3>
+  <ol id="rating"></ol>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
