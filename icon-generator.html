@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Icon Generator</title>
+</head>
+<body>
+
+<button onclick="makeIcon(192)">Завантажити 192x192</button>
+<button onclick="makeIcon(512)">Завантажити 512x512</button>
+
+<script>
+function makeIcon(size) {
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+
+  const ctx = canvas.getContext("2d");
+
+  // фон (український)
+  ctx.fillStyle = "#0057B7";
+  ctx.fillRect(0, 0, size, size);
+
+  // жовтий круг
+  ctx.beginPath();
+  ctx.arc(size/2, size/2, size/2.5, 0, Math.PI * 2);
+  ctx.fillStyle = "#FFD700";
+  ctx.fill();
+
+  // текст ₴
+  ctx.fillStyle = "#0057B7";
+  ctx.font = `bold ${size/2}px Arial`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("₴", size/2, size/2);
+
+  // download
+  const link = document.createElement("a");
+  link.download = `icon-${size}.png`;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+</script>
+
+</body>
+</html>
