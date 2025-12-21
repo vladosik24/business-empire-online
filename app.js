@@ -26,7 +26,7 @@ function startGame() {
 
   render();
   setInterval(tick, 1000);
-  setInterval(randomEvent, 30000); // подія кожні 30 секунд
+  setInterval(randomEvent, 30000);
 }
 
 function tick() {
