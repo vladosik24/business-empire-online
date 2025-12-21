@@ -4,15 +4,8 @@ body {
   margin: 0;
   padding: 20px;
 }
-
-h1, h2, h3 {
-  text-align: center;
-}
-
-.hidden {
-  display: none;
-}
-
+h1, h2, h3 { text-align: center; }
+.hidden { display: none; }
 #login, #game {
   max-width: 420px;
   margin: auto;
@@ -20,16 +13,10 @@ h1, h2, h3 {
   padding: 20px;
   border-radius: 10px;
 }
-
 button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  font-size: 16px;
+  padding: 6px 12px;
+  margin: 4px;
+  font-size: 14px;
 }
-
-.business {
-  border: 1px solid #ddd;
-  padding: 10px;
-  margin: 10px 0;
-}
+.business { border: 1px solid #ddd; padding: 10px; margin: 10px 0; }
+#events { text-align: center; margin-top: 10px; font-weight: bold; }
