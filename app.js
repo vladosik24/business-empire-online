@@ -121,3 +121,34 @@ function clickSound() {
   audio.play();
 }
 render();
+function saveScore() {
+  const name = document.getElementById("playerName").value || "Гравець";
+  fetch(`${DB_URL}/scores.json`, {
+    method: "POST",
+    body: JSON.stringify({
+      name,
+      money: Math.floor(balance),
+      time: Date.now()
+    })
+  }).then(loadLeaderboard);
+}
+
+function loadLeaderboard() {
+  fetch(`${DB_URL}/scores.json`)
+    .then(res => res.json())
+    .then(data => {
+      if (!data) return;
+      const list = Object.values(data)
+        .sort((a,b)=>b.money-a.money)
+        .slice(0,10);
+      const ul = document.getElementById("leaderboardList");
+      ul.innerHTML = "";
+      list.forEach(s=>{
+        const li = document.createElement("li");
+        li.textContent = `${s.name} — ₴${s.money}`;
+        ul.appendChild(li);
+      });
+    });
+}
+
+loadLeaderboard();
