@@ -45,3 +45,19 @@ button {
   min-height: 30px;
   text-align: center;
 }
+#leaderboard {
+  margin-top: 15px;
+  background: rgba(255,255,255,0.25);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+#leaderboard ul {
+  list-style: none;
+  padding: 0;
+}
+
+#leaderboard li {
+  padding: 5px;
+  animation: fadeIn 0.5s ease;
+}
