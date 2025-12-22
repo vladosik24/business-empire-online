@@ -1,3 +1,4 @@
+const DB_URL = "https://business-empire-default-rtdb.firebaseio.com";
 // ====== GAME DATA ======
 let balance = parseFloat(localStorage.getItem("balance")) || 0;
 let businesses = JSON.parse(localStorage.getItem("businesses")) || [
