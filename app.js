@@ -152,3 +152,26 @@ function loadLeaderboard() {
 }
 
 loadLeaderboard();
+function loadLeaderboard() {
+  fetch(`${DB_URL}/scores.json`)
+    .then(res => res.json())
+    .then(data => {
+      const ul = document.getElementById("leaderboardList");
+      ul.innerHTML = "";
+
+      if (!data) return;
+
+      const list = Object.values(data)
+        .filter(s => typeof s.money === "number" && s.money > 0)
+        .sort((a, b) => b.money - a.money)
+        .slice(0, 10);
+
+      list.forEach(s => {
+        const li = document.createElement("li");
+        const name = s.name ? s.name : "Гравець";
+        const money = Number.isFinite(s.money) ? s.money : 0;
+        li.textContent = `${name} — ₴${money}`;
+        ul.appendChild(li);
+      });
+    });
+}
