@@ -111,5 +111,12 @@ function updateBonusTimer(){
   bonusTimerEl.textContent = `Щоденний бонус: ${h}:${m}:${s}`;
 }
 setInterval(updateBonusTimer,1000);
+function vibrate(ms = 50) {
+  if (navigator.vibrate) navigator.vibrate(ms);
+}
 
+function clickSound() {
+  const audio = new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=");
+  audio.play();
+}
 render();
