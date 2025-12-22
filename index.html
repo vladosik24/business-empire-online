@@ -24,5 +24,10 @@
     <button id="daily-bonus-btn">Забрати щоденний бонус</button>
   </footer>
 <script src="app.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js");
+}
+</script>
 </body>
 </html>
