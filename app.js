@@ -177,3 +177,7 @@ function loadLeaderboard() {
       });
     });
 }
+document.addEventListener("DOMContentLoaded", () => {
+  render();
+  loadLeaderboard();
+});
