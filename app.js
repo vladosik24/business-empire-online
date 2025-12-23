@@ -178,3 +178,7 @@ function loadLeaderboard() {
     })
     .catch(() => {});
 }
+document.addEventListener("DOMContentLoaded", () => {
+  render();
+  loadLeaderboard();
+});
