@@ -150,27 +150,30 @@ function loadLeaderboard() {
   fetch(`${DB_URL}/scores.json`)
     .then(res => res.json())
     .then(data => {
-      leaderboardEl.innerHTML = "";
+      const ul = document.getElementById("leaderboardList");
+      ul.innerHTML = "";
+
       if (!data) return;
 
-      Object.values(data)
-        .filter(s =>
-          s &&
-          typeof s === "object" &&
-          typeof s.name === "string" &&
-          s.name.trim().length > 0 &&
-          typeof s.money === "number" &&
-          s.money > 0
-        )
+      const list = Object.values(data)
+        .filter(s => typeof s.money === "number" && s.money > 0)
         .sort((a, b) => b.money - a.money)
-        .slice(0, 10)
-        .forEach(s => {
-          const li = document.createElement("li");
-          li.textContent = `${s.name} — ₴${s.money}`;
-          leaderboardEl.appendChild(li);
-        });
+        .slice(0, 10);
+
+      list.forEach(s => {
+        const li = document.createElement("li");
+        li.textContent = `${s.name || "Гравець"} — ₴${s.money}`;
+        ul.appendChild(li);
+      });
+
+      // 🔒 TELEGRAM SAFETY CLEAN (ОСЬ ТУТ)
+      Array.from(ul.children).forEach(li => {
+        if (
+          li.textContent.includes("undefined") ||
+          li.textContent.includes("NaN")
+        ) {
+          li.remove();
+        }
+      });
     });
 }
-
-render();
-loadLeaderboard();
