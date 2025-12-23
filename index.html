@@ -4,35 +4,44 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Business Empire ₴</title>
+
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  <header>
-    <h1>Business Empire ₴</h1>
-    <div id="balance">Баланс: ₴0</div>
-    <div id="bonus-timer">Щоденний бонус: 00:00</div>
-  </header>
+<header>
+  <h1>Business Empire ₴</h1>
+  <div id="balance">Баланс: ₴0</div>
+  <div id="bonus-timer">Щоденний бонус: 00:00:00</div>
+</header>
+
 <section id="leaderboard">
   <h2>🏆 Лідери</h2>
   <input id="playerName" placeholder="Твоє ім'я">
   <button onclick="saveScore()">Зберегти результат</button>
   <ul id="leaderboardList"></ul>
 </section>
-  <main>
-    <div id="business-list"></div>
-    <div id="events"></div>
-  </main>
-  <footer>
-    <div id="stats">
-      <p>Бізнесів: 0 | Дохід: ₴0/сек</p>
-    </div>
-    <button id="daily-bonus-btn">Забрати щоденний бонус</button>
-  </footer>
-<script src="app.js?v=3"></script>
+
+<main>
+  <div id="business-list"></div>
+  <div id="events"></div>
+</main>
+
+<footer>
+  <div id="stats">
+    <p>Бізнесів: 0 | Дохід: ₴0/сек</p>
+  </div>
+  <button id="daily-bonus-btn">Забрати щоденний бонус</button>
+</footer>
+
+<script src="app.js?v=4" defer></script>
+
 <script>
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js");
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
 }
 </script>
 </body>
