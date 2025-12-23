@@ -151,33 +151,30 @@ function loadLeaderboard() {
     .then(res => res.json())
     .then(data => {
       const ul = document.getElementById("leaderboardList");
+      if (!ul) return;
+
       ul.innerHTML = "";
 
-      if (!data) return;
+      if (!data || typeof data !== "object") return;
 
       const list = Object.values(data)
-        .filter(s => typeof s.money === "number" && s.money > 0)
+        .filter(s =>
+          s &&
+          typeof s === "object" &&
+          typeof s.name === "string" &&
+          s.name.trim().length > 0 &&
+          typeof s.money === "number" &&
+          Number.isFinite(s.money) &&
+          s.money > 0
+        )
         .sort((a, b) => b.money - a.money)
         .slice(0, 10);
 
       list.forEach(s => {
         const li = document.createElement("li");
-        li.textContent = `${s.name || "Гравець"} — ₴${s.money}`;
+        li.textContent = `${s.name} — ₴${s.money}`;
         ul.appendChild(li);
       });
-
-      // 🔒 TELEGRAM SAFETY CLEAN (ОСЬ ТУТ)
-      Array.from(ul.children).forEach(li => {
-        if (
-          li.textContent.includes("undefined") ||
-          li.textContent.includes("NaN")
-        ) {
-          li.remove();
-        }
-      });
-    });
+    })
+    .catch(() => {});
 }
-document.addEventListener("DOMContentLoaded", () => {
-  render();
-  loadLeaderboard();
-});
