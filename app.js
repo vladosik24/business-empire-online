@@ -46,7 +46,8 @@ function render() {
     0
   );
 
-  statsEl.textContent = `Бізнесів: ${businesses.length} | Дохід: ₴${totalIncome.toFixed(2)}/сек`;
+  statsEl.textContent =
+    `Бізнесів: ${businesses.length} | Дохід: ₴${totalIncome.toFixed(2)}/сек`;
 }
 
 // ====== UPGRADE ======
@@ -61,7 +62,7 @@ function upgrade(i) {
     render();
     showEvent(`Апгрейд: ${b.name}`);
   } else {
-    showEvent(`Недостатньо грошей`);
+    showEvent("Недостатньо грошей");
   }
 }
 
@@ -134,58 +135,46 @@ function saveScore() {
   fetch(`${DB_URL}/scores.json`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name,
-      money,
-      createdAt: Date.now()
-    })
+    body: JSON.stringify({ name, money, createdAt: Date.now() })
   }).then(() => {
     input.value = "";
     loadLeaderboard();
   });
 }
 
-// ====== LEADERBOARD LOAD (FIX UNDEFINED) ======
+// ====== LEADERBOARD LOAD ======
 function loadLeaderboard() {
   fetch(`${DB_URL}/scores.json`)
     .then(res => res.json())
     .then(data => {
-      const ul = document.getElementById("leaderboardList");
-      if (!ul) return;
+      if (!leaderboardEl) return;
 
-      ul.innerHTML = "";
+      leaderboardEl.innerHTML = "";
 
       if (!data || typeof data !== "object") return;
 
-      const list = Object.values(data)
+      Object.values(data)
         .filter(s =>
           s &&
-          typeof s === "object" &&
           typeof s.name === "string" &&
-          s.name.trim().length > 0 &&
-          typeof s.money === "number" &&
+          s.name.trim() &&
           Number.isFinite(s.money) &&
           s.money > 0
         )
         .sort((a, b) => b.money - a.money)
-        .slice(0, 10);
+        .slice(0, 10)
+        .forEach(s => {
+          const li = document.createElement("li");
+          li.textContent = `${s.name} — ₴${Math.floor(s.money)}`;
+          leaderboardEl.appendChild(li);
+        });
+    })
+    .catch(() => {});
+}
 
-   list.forEach(s => {
-  if (!s.name || !Number.isFinite(s.money)) return;
-
-  const li = document.createElement("li");
-  li.textContent = `${s.name} — ₴${Math.floor(s.money)}`;
-  ul.appendChild(li);
-});
+// ====== INIT (CRITICAL FOR TELEGRAM) ======
 document.addEventListener("DOMContentLoaded", () => {
   render();
   loadLeaderboard();
-});
-// ====== INIT ======
-document.addEventListener("DOMContentLoaded", () => {
-  render();
-  loadLeaderboard();
-
-  // повторне завантаження для Telegram (фікс WebView)
   setTimeout(loadLeaderboard, 500);
 });
