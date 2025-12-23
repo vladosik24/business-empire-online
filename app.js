@@ -182,3 +182,11 @@ document.addEventListener("DOMContentLoaded", () => {
   render();
   loadLeaderboard();
 });
+// ====== INIT ======
+document.addEventListener("DOMContentLoaded", () => {
+  render();
+  loadLeaderboard();
+
+  // повторне завантаження для Telegram (фікс WebView)
+  setTimeout(loadLeaderboard, 500);
+});
