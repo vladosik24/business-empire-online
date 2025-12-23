@@ -170,14 +170,13 @@ function loadLeaderboard() {
         .sort((a, b) => b.money - a.money)
         .slice(0, 10);
 
-      list.forEach(s => {
-        const li = document.createElement("li");
-        li.textContent = `${s.name} — ₴${s.money}`;
-        ul.appendChild(li);
-      });
-    })
-    .catch(() => {});
-}
+   list.forEach(s => {
+  if (!s.name || !Number.isFinite(s.money)) return;
+
+  const li = document.createElement("li");
+  li.textContent = `${s.name} — ₴${Math.floor(s.money)}`;
+  ul.appendChild(li);
+});
 document.addEventListener("DOMContentLoaded", () => {
   render();
   loadLeaderboard();
